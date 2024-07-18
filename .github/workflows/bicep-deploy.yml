@@ -18,12 +18,6 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Install Bicep CLI
-      run: |
-        az bicep install
-        echo "Bicep version:"
-        az bicep version
         
     - name: Deploy Bicep file
       id: bicep-deploy
@@ -36,8 +30,18 @@ jobs:
         deploymentName: sampleDeployment
         deploymentMode: Complete
         failOnStdErr: false
-        bicep_use_binary_from_path: true
 
+    - name: Check Deployment Status
+      run: |
+        while true; do
+          status=$(az deployment group show --resource-group demo --name sampleDeployment --query "properties.provisioningState" -o tsv)
+          echo "Deployment status: $status"
+          if [ "$status" == "Succeeded" ] || [ "$status" == "Failed" ]; then
+            break
+          fi
+          sleep 30
+        done
+        
     - name: Get deployment outputs
       run: |
         echo "Outputs: ${{ steps.bicep-deploy.outputs['topicEndpoint'] }}"
