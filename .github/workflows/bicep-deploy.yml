@@ -33,35 +33,7 @@ jobs:
           deploymentMode: Complete
           failOnStdErr: false
 
-  fetch-status:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set debug environment variable
-        run: echo "AZURE_ARM_DEPLOY_LOG_LEVEL=debug" >> $GITHUB_ENV
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Check Deployment Status
+      - name: Get deployment outputs
         run: |
-          echo "Checking deployment status..."
-          status="InProgress"
-          while [ "$status" == "InProgress" ]; do
-            status=$(az deployment group show --resource-group demo --name sampleDeployment --query "properties.provisioningState" -o tsv)
-            echo "Deployment status: $status"
-            if [ "$status" != "InProgress" ]; then
-              break
-            fi
-            sleep 30
-          done
-          if [ "$status" == "Succeeded" ]; then
-            echo "Deployment succeeded."
-          else
-            echo "Deployment failed."
-            exit 1
-          fi
+          echo "Outputs: ${{ steps.bicep-deploy.outputs['topicEndpoint'] }}"
+          echo "Provisioning State: ${{ steps.bicep-deploy.outputs['topicProvisioningState'] }}"
