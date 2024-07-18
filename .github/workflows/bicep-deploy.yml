@@ -1,0 +1,33 @@
+name: Azure ARM Template Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - bicep
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy ARM Template
+      id: arm-deploy
+      uses: Azure/arm-deploy@v1
+      with:
+        scopeLevel: subscription
+        template: ./Infrastructure/main.bicep
+        parameters: ./Infrastructure/main.bicepparam
+        deploymentName: sampleDeployment 
+        location: uksouth
+    - name: Get deployment outputs
+      run: |
+        echo "Outputs: ${{ steps.arm-deploy.outputs.outputs }}"
