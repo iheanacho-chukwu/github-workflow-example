@@ -26,6 +26,7 @@ jobs:
         scope: subscription
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         region: uksouth
+        resourceGroupName: githubflow-rg
         template: ./Infrastructure/main.bicep
         parameters: ./Infrastructure/main.bicepparam
         deploymentName: sampleDeployment
