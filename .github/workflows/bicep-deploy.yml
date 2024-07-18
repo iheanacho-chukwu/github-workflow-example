@@ -1,4 +1,4 @@
-name: Azure ARM Template Deployment
+name: Deploy Bicep file
 
 on:
   push:
@@ -7,31 +7,32 @@ on:
       - bicep
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Login to Azure
-      uses: azure/login@v1.4.7
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy ARM Template
+    - name: Deploy Bicep file
       id: arm-deploy
-      uses: Azure/arm-deploy@v1.0.0
+      uses: azure/arm-deploy@v1
       with:
         scope: subscription
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        subscriptionId: 800eeb5c-ab87-468f-800b-d9ca632b4f73
         region: uksouth
         resourceGroupName: githubflow-rg
         template: ./Infrastructure/main.bicep
         parameters: ./Infrastructure/main.bicepparam
         deploymentName: sampleDeployment
         deploymentMode: Incremental
+        failOnStdErr: false
 
-    - name: Get deployment outputs
-      run: |
-        echo "Outputs: ${{ steps.arm-deploy.outputs.outputs }}"
+    # - name: Get deployment outputs
+    #   run: |
+    #     echo "Outputs: ${{ steps.arm-deploy.outputs.outputs }}"
