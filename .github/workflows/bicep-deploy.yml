@@ -9,10 +9,16 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        task: [deploy, fetch-status]
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Set debug environment variable
+      run: echo "AZURE_ARM_DEPLOY_LOG_LEVEL=debug" >> $GITHUB_ENV
 
     - name: Login to Azure
       uses: azure/login@v1
@@ -20,6 +26,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
   
     - name: Deploy Bicep file
+      if: matrix.task == 'deploy'
       id: bicep-deploy
       uses: azure/arm-deploy@v1
       with:
@@ -32,6 +39,7 @@ jobs:
         failOnStdErr: false
 
     - name: Check Deployment Status
+      if: matrix.task == 'fetch-status'
       run: |
         while true; do
           status=$(az deployment group show --resource-group demo --name sampleDeployment --query "properties.provisioningState" -o tsv)
