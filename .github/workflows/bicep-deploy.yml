@@ -20,7 +20,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy Bicep file
-      id: arm-deploy
+      id: bicep-deploy
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: 800eeb5c-ab87-468f-800b-d9ca632b4f73
@@ -28,6 +28,7 @@ jobs:
         template: ./Infrastructure/main.bicep
         parameters: ./Infrastructure/main.bicepparam
         deploymentName: sampleDeployment
+        deploymentMode: Complete
         failOnStdErr: false
 
     - name: Get deployment outputs
