@@ -32,27 +32,9 @@ jobs:
           deploymentName: sampleDeployment
           deploymentMode: Complete
           failOnStdErr: false
-        background: true
-
-      - name: Check Deployment Status
-        run: |
-          while true; do
-            status=$(az deployment group show --resource-group demo --name sampleDeployment --query "properties.provisioningState" -o tsv)
-            echo "Deployment status: $status"
-            if [ "$status" == "Succeeded" ] || [ "$status" == "Failed" ]; then
-              break
-            fi
-            sleep 30
-          done
-
-      - name: Get deployment outputs
-        run: |
-          echo "Outputs: ${{ steps.bicep-deploy.outputs['topicEndpoint'] }}"
-          echo "Provisioning State: ${{ steps.bicep-deploy.outputs['topicProvisioningState'] }}"
 
   fetch-status:
     runs-on: ubuntu-latest
-    needs: deploy
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -64,11 +46,19 @@ jobs:
 
       - name: Check Deployment Status
         run: |
-          while true; do
+          echo "Checking deployment status..."
+          status="InProgress"
+          while [ "$status" == "InProgress" ]; do
             status=$(az deployment group show --resource-group demo --name sampleDeployment --query "properties.provisioningState" -o tsv)
             echo "Deployment status: $status"
-            if [ "$status" == "Succeeded" ] || [ "$status" == "Failed" ]; then
+            if [ "$status" != "InProgress" ]; then
               break
             fi
             sleep 30
           done
+          if [ "$status" == "Succeeded" ]; then
+            echo "Deployment succeeded."
+          else
+            echo "Deployment failed."
+            exit 1
+          fi
