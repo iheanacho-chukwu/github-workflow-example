@@ -32,6 +32,18 @@ jobs:
           deploymentName: sampleDeployment
           deploymentMode: Complete
           failOnStdErr: false
+        background: true
+
+      - name: Check Deployment Status
+        run: |
+          while true; do
+            status=$(az deployment group show --resource-group demo --name sampleDeployment --query "properties.provisioningState" -o tsv)
+            echo "Deployment status: $status"
+            if [ "$status" == "Succeeded" ] || [ "$status" == "Failed" ]; then
+              break
+            fi
+            sleep 30
+          done
 
       - name: Get deployment outputs
         run: |
