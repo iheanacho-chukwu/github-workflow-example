@@ -24,12 +24,12 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: 800eeb5c-ab87-468f-800b-d9ca632b4f73
-        resourceGroupName: githubflow-rg
+        resourceGroupName: demo
         template: ./Infrastructure/main.bicep
         parameters: ./Infrastructure/main.bicepparam
         deploymentName: sampleDeployment
         failOnStdErr: false
 
-    # - name: Get deployment outputs
-    #   run: |
-    #     echo "Outputs: ${{ steps.arm-deploy.outputs.outputs }}"
+    - name: Get deployment outputs
+      run: |
+        echo "Outputs: ${{ steps.bicep-deploy.outputs.outputs }}"
