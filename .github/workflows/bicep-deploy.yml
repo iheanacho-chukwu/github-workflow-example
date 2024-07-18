@@ -23,14 +23,11 @@ jobs:
       id: arm-deploy
       uses: azure/arm-deploy@v1
       with:
-        scope: subscription
         subscriptionId: 800eeb5c-ab87-468f-800b-d9ca632b4f73
-        region: uksouth
         resourceGroupName: githubflow-rg
         template: ./Infrastructure/main.bicep
         parameters: ./Infrastructure/main.bicepparam
         deploymentName: sampleDeployment
-        deploymentMode: Incremental
         failOnStdErr: false
 
     # - name: Get deployment outputs

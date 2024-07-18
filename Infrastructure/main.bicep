@@ -1,16 +1,17 @@
-targetScope = 'subscription'
-
-param resourceGroupUKSParam object
-
+param topicNameParam string
 param tagsParam object = {}
+param location string = resourceGroup().location
 
 var serviceName = 'exampleservice'
 
-module resourceGroupUKS 'Modules/resource-group.bicep' = {
-  name: '${serviceName}-ResourceGroupUks'
-  scope: subscription()
+module eventGridTopic './Modules/eventGridTopic.bicep' = {
+  name: '${serviceName}-eventGridTopic'
   params: {
-    resourceGroup: resourceGroupUKSParam
+    topicName: topicNameParam
+    location: location
     tags: tagsParam
   }
 }
+
+output topicEndpoint string = eventGridTopic.outputs.topicEndpoint
+output topicProvisioningState string = eventGridTopic.outputs.topicProvisioningState
