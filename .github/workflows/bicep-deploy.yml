@@ -18,7 +18,11 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
+
+    - name: Status
+      run: |
+        az deployment group show --resource-group demo --name sampleDeployment
+  
     - name: Deploy Bicep file
       id: bicep-deploy
       uses: azure/arm-deploy@v1
@@ -33,6 +37,7 @@ jobs:
 
     - name: Check Deployment Status
       run: |
+        az deployment group show --resource-group demo --name sampleDeployment
         while true; do
           status=$(az deployment group show --resource-group demo --name sampleDeployment --query "properties.provisioningState" -o tsv)
           echo "Deployment status: $status"
