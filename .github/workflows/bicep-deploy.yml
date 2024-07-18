@@ -33,4 +33,5 @@ jobs:
 
     - name: Get deployment outputs
       run: |
-        echo "Outputs: ${{ steps.bicep-deploy.outputs.outputs }}"
+        echo "Outputs: ${{ steps.bicep-deploy.outputs['topicEndpoint'] }}"
+        echo "Provisioning State: ${{ steps.bicep-deploy.outputs['topicProvisioningState'] }}"
