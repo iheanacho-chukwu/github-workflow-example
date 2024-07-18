@@ -12,22 +12,25 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Login to Azure
-      uses: azure/login@v1
+      uses: azure/login@v1.4.7
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy ARM Template
       id: arm-deploy
-      uses: Azure/arm-deploy@v1
+      uses: Azure/arm-deploy@v1.0.0
       with:
-        scopeLevel: subscription
+        scope: subscription
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        region: uksouth
         template: ./Infrastructure/main.bicep
         parameters: ./Infrastructure/main.bicepparam
-        deploymentName: sampleDeployment 
-        location: uksouth
+        deploymentName: sampleDeployment
+        deploymentMode: Incremental
+
     - name: Get deployment outputs
       run: |
         echo "Outputs: ${{ steps.arm-deploy.outputs.outputs }}"
