@@ -30,6 +30,7 @@ jobs:
         deploymentName: sampleDeployment
         deploymentMode: Complete
         failOnStdErr: false
+        bicep_use_binary_from_path: true
 
     - name: Get deployment outputs
       run: |
