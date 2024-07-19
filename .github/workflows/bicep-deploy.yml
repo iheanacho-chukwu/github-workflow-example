@@ -29,8 +29,8 @@ jobs:
         id: bicep-deploy
         uses: azure/arm-deploy@v1
         with:
-          subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ env.ResourceGroupName }}
+          subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ vars.ResourceGroupName }}
           template: ./Infrastructure/main.bicep
           parameters: ./Infrastructure/main.bicepparam
           deploymentName: sampleDeployment
