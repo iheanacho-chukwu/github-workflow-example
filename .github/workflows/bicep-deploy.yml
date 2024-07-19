@@ -31,6 +31,7 @@ jobs:
           parameters: ./Infrastructure/main.bicepparam
           deploymentName: sampleDeployment
           deploymentMode: Complete
+          additionalArguments: --what-if
           failOnStdErr: false
 
       - name: Get deployment outputs
