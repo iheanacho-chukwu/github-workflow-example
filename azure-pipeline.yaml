@@ -1,0 +1,9 @@
+variables:
+  # - group: pipeline-vars
+  AUTH_TYPE: password
+
+steps:
+  - checkout: shared-library
+  - template: pipeline-templates/auth.yaml@shared-library
+    parameters:
+      AUTH_TYPE: $(AUTH_TYPE)
