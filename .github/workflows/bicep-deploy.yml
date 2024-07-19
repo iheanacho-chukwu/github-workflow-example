@@ -26,11 +26,9 @@ jobs:
       #   run: echo "AZURE_SUBSCRIPTION_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r '.subscriptionId')" >> $GITHUB_ENV
 
       - name: Create Azure resource group
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az group create --name ${{ env.ResourceGroupName }} --location ${{ env.ResourceGroupLocation }}
-            echo "Azure resource group created"
+        run: |
+          az group create --name ${{ env.ResourceGroupName }} --location ${{ env.ResourceGroupLocation }}
+          echo "Azure resource group created"
 
       - name: Deploy Bicep file
         id: bicep-deploy
