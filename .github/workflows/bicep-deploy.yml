@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set debug environment variable
         run: echo "AZURE_ARM_DEPLOY_LOG_LEVEL=debug" >> $GITHUB_ENV
