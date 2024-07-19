@@ -3,7 +3,7 @@ variables:
   AUTH_TYPE: password
 
 steps:
-  - checkout: shared-library
-  - template: pipeline-templates/auth.yaml@shared-library
+  # - checkout: shared-library
+  - template: pipeline-templates/auth.yaml
     parameters:
       AUTH_TYPE: $(AUTH_TYPE)
