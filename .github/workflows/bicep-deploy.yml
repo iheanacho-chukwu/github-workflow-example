@@ -21,17 +21,26 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Create Azure resource group
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az group create --name ${{ env.ResourceGroupName }} --location ${{ env.ResourceGroupLocation }}
+            echo "Azure resource group created"
+
       - name: Deploy Bicep file
         id: bicep-deploy
         uses: azure/arm-deploy@v1
+        env:
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_CREDENTIALS | fromJson | select(.subscriptionId) }}
         with:
-          subscriptionId: 800eeb5c-ab87-468f-800b-d9ca632b4f73
-          resourceGroupName: demo
+          subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.ResourceGroupName }}
           template: ./Infrastructure/main.bicep
           parameters: ./Infrastructure/main.bicepparam
           deploymentName: sampleDeployment
           deploymentMode: Complete
-          additionalArguments: --what-if
+          additionalArguments: "--what-if --rollback-on-error --what-if-exclude-change-types Create Ignore"
           failOnStdErr: false
 
       - name: Get deployment outputs
