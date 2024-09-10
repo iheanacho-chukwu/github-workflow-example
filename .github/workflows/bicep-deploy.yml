@@ -31,8 +31,8 @@ jobs:
         with:
           subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ vars.ResourceGroupName }}
-          template: ./Infrastructure/main.bicep
-          parameters: ./Infrastructure/main.bicepparam
+          template: ./Bicep/main.bicep
+          parameters: ./Bicep/main.bicepparam
           deploymentName: sampleDeployment
           deploymentMode: Complete
           additionalArguments: "--what-if --rollback-on-error --what-if-exclude-change-types Create Ignore"
