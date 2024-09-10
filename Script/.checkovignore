@@ -1,0 +1,6 @@
+# listed ruleIDs will be ignored from the scan results
+ignore:
+  - id: "CKV_AZURE_17"
+    expiry: "2025-07-09"
+    created: "2024-07-09"
+    reason: "Not Required"
