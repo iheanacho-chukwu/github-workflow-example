@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - bicep
+      # - bicep
 
 jobs:
   deploy:
@@ -31,13 +31,35 @@ jobs:
         with:
           subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ vars.ResourceGroupName }}
-          template: ./Infrastructure/main.bicep
-          parameters: ./Infrastructure/main.bicepparam
+          template: ./Bicep/main.bicep
+          parameters: ./Bicep/main.bicepparam
           deploymentName: sampleDeployment
-          deploymentMode: Complete
+          deploymentMode: Incremental
           additionalArguments: "--what-if --rollback-on-error --what-if-exclude-change-types Create Ignore"
           failOnStdErr: false
 
       - name: Get deployment outputs
         run: |
           echo "Provisioning State: ${{ steps.bicep-deploy.outputs['topicProvisioningState'] }}"
+  
+  checkov_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Checkov
+        run: |
+          pip install checkov
+
+      - name: Run Checkov scan on Bicep file
+        run: |
+          echo "[INFO] Running Checkov scan..."
+          mkdir -p results
+          checkov --file ./Bicep/main.bicep --framework bicep --soft-fail --quiet --compact --output sarif --output-file-path ./results/checkov.sarif
+
+      - name: Upload Checkov SARIF logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: CheckovScanResults
+          path: ./results/checkov.sarif
