@@ -1,5 +1,5 @@
 import yaml
-import os  # Fix: import os module
+import os  # Make sure to import the os module
 from datetime import datetime
 
 def is_expired(expiry_date):
