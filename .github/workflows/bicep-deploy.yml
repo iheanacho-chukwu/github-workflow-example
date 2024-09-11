@@ -7,40 +7,6 @@ on:
       - bicep-checkov-scan
 
 jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Set debug environment variable
-#         run: echo "AZURE_ARM_DEPLOY_LOG_LEVEL=debug" >> $GITHUB_ENV
-
-#       - name: Login to Azure
-#         uses: azure/login@v1
-#         with:
-#           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-#       - name: Extract subscription ID from Azure credentials
-#         id: extract-subscription-id
-#         run: echo "AZURE_SUBSCRIPTION_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r '.subscriptionId')" >> $GITHUB_ENV
-
-#       - name: Deploy Bicep file
-#         id: bicep-deploy
-#         uses: azure/arm-deploy@v1
-#         with:
-#           subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
-#           resourceGroupName: ${{ vars.ResourceGroupName }}
-#           template: ./Bicep/main.bicep
-#           parameters: ./Bicep/main.bicepparam
-#           deploymentName: sampleDeployment
-#           deploymentMode: Incremental
-#           failOnStdErr: false
-
-#       - name: Get deployment outputs
-#         run: |
-#           echo "Provisioning State: ${{ steps.bicep-deploy.outputs['topicProvisioningState'] }}"
-  
   checkov_scan:
     runs-on: ubuntu-latest
     steps:
@@ -63,12 +29,12 @@ jobs:
         run: |
           echo "[INFO] Running Checkov scan with SKIP_CHECKS: ${SKIP_CHECKS}"
           checkov --directory ./Bicep --file ./Bicep/main.bicep --framework bicep --soft-fail --quiet --compact --output junitxml \
-          --output-file-path . --skip-check ${SKIP_CHECKS} > results_checkov.xml
+          --output-file-path ./l --skip-check ${SKIP_CHECKS}
         env:
-          SKIP_CHECKS: ${{ env.SKIP_CHECKS }}  # Reuse the SKIP_CHECKS variable
+          SKIP_CHECKS: ${{ env.SKIP_CHECKS }}
 
       - name: Upload Checkov SARIF logs
         uses: actions/upload-artifact@v3
         with:
           name: CheckovScanResults
-          path: .
+          path: ./results_checkov.xml
