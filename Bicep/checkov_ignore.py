@@ -1,6 +1,6 @@
 import yaml
 import os
-import subprocess  # To run shell commands from Python
+import subprocess
 from datetime import datetime
 
 def is_expired(expiry_date):
@@ -9,7 +9,10 @@ def is_expired(expiry_date):
     return current_date > expiry_date
 
 try:
-    # Load the YAML content from the file
+    # Navigate to the Bicep directory
+    os.chdir('Bicep')
+
+    # Load the YAML content from the .checkovignore file
     with open('.checkovignore', 'r') as file:
         data = yaml.safe_load(file)
 
@@ -65,16 +68,4 @@ except FileNotFoundError:
         '--directory', '.',
         '--file', 'main.bicep',
         '--framework', 'bicep',
-        '--soft-fail',
-        '--quiet',
-        '--compact',
-        '--output', 'junitxml',
-        '--skip-check', skip_checks
-    ]
-
-    with open('results_checkov.xml', 'w') as result_file:
-        subprocess.run(checkov_command, stdout=result_file)
-
-    # Set the environment variable in GitHub Actions
-    with open(os.getenv('GITHUB_ENV'), 'a') as env_file:
-        env_file.write(f"SKIP_CHECKS={skip_checks}\n")
+        '--soft-fail
