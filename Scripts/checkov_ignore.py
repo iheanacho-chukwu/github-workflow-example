@@ -23,15 +23,17 @@ try:
     # Get the total number of ids
     total_ids = len(ids)
 
-    # Print the results in a way that can be captured by the shell script
+    # Print the results for debugging purposes
     print(f"SKIP_CHECKS: {skip_checks}")
     print(f"TOTAL_SKIPPED: {total_ids}")
 
-    # Set the pipeline variable for other tasks
-    print(f"##vso[task.setvariable variable=SKIP_CHECKS]{skip_checks}")
+    # Set the environment variable in GitHub Actions
+    with open(os.getenv('GITHUB_ENV'), 'a') as env_file:
+        env_file.write(f"SKIP_CHECKS={skip_checks}\n")
 
 except FileNotFoundError:
     # Handle the case where the file is not found
     skip_checks = "null"
     print("[INFO], Checkov ignore file not found, assign SKIP_CHECKS as null, for error handling when running checkov scan...")
-    print(f"##vso[task.setvariable variable=SKIP_CHECKS]{skip_checks}")
+    with open(os.getenv('GITHUB_ENV'), 'a') as env_file:
+        env_file.write(f"SKIP_CHECKS={skip_checks}\n")
