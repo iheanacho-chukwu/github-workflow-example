@@ -29,7 +29,7 @@ jobs:
         run: |
           echo "[INFO] Running Checkov scan with SKIP_CHECKS: ${SKIP_CHECKS}"
           checkov --directory ./Bicep --file ./Bicep/main.bicep --framework bicep --soft-fail --quiet --compact --output junitxml \
-          --output-file-path ./l --skip-check ${SKIP_CHECKS}
+          --output-file-path ./results_checkov.xml --skip-check ${SKIP_CHECKS}
         env:
           SKIP_CHECKS: ${{ env.SKIP_CHECKS }}
 
