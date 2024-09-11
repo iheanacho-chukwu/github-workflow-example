@@ -6,7 +6,7 @@ on:
       - main
       - bicep-checkov-scan
 
-# jobs:
+jobs:
 #   deploy:
 #     runs-on: ubuntu-latest
 #     steps:
