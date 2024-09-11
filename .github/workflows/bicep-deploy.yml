@@ -23,9 +23,6 @@ jobs:
           echo "[INFO] Running Checkov Ignore Script..."
           python3 Scripts/checkov_ignore.py
 
-      - name: Print SKIP_CHECKS
-        run: echo "SKIP_CHECKS is $(SKIP_CHECKS)"
-
       # - name: Run Checkov Scan
       #   run: |
       #     echo "[INFO] Running Checkov scan with SKIP_CHECKS: ${SKIP_CHECKS}"
