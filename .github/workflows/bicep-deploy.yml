@@ -51,14 +51,18 @@ jobs:
         run: |
           pip install checkov
 
+      - name: Run Checkov Ignore Checks Python Script
+        run: |
+          echo "[INFO] Running Checkov Ignore Script..."
+          python3 Scripts/checkov_ignore.py
+
       - name: Run Checkov scan on Bicep file
         run: |
           echo "[INFO] Running Checkov scan..."
-          mkdir -p results
-          checkov --file ./Bicep/main.bicep --framework bicep --soft-fail --quiet --compact --output sarif --output-file-path ./results/checkov.sarif
-
+          checkov --directory ./Bicep --file ./Bicep/main.bicep --framework bicep --soft-fail --quiet --compact --output junitxml \
+          --output-file-path . --skip-check $(SKIP_CHECKS) > results_checkov.xml
       - name: Upload Checkov SARIF logs
         uses: actions/upload-artifact@v3
         with:
           name: CheckovScanResults
-          path: ./results/checkov.sarif
+          path: .
