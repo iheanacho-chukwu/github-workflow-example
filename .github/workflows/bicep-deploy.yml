@@ -21,7 +21,7 @@ jobs:
       - name: Run Checkov Ignore Checks Python Script
         run: |
           echo "[INFO] Running Checkov Ignore Script..."
-          python3 Scripts/checkov_ignore.py
+          python3 ./Bicep/checkov_ignore.py
 
       # - name: Run Checkov Scan
       #   run: |
