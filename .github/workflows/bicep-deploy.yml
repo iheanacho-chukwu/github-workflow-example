@@ -56,11 +56,17 @@ jobs:
           echo "[INFO] Running Checkov Ignore Script..."
           python3 Scripts/checkov_ignore.py
 
-      - name: Run Checkov scan on Bicep file
+      - name: Print SKIP_CHECKS
+        run: echo "SKIP_CHECKS is: ${{ env.SKIP_CHECKS }}"
+
+      - name: Run Checkov Scan
         run: |
-          echo "[INFO] Running Checkov scan..."
+          echo "[INFO] Running Checkov scan with SKIP_CHECKS: ${SKIP_CHECKS}"
           checkov --directory ./Bicep --file ./Bicep/main.bicep --framework bicep --soft-fail --quiet --compact --output junitxml \
-          --output-file-path . --skip-check $(SKIP_CHECKS) > results_checkov.xml
+          --output-file-path . --skip-check ${SKIP_CHECKS} > results_checkov.xml
+        env:
+          SKIP_CHECKS: ${{ env.SKIP_CHECKS }}  # Reuse the SKIP_CHECKS variable
+
       - name: Upload Checkov SARIF logs
         uses: actions/upload-artifact@v3
         with:
