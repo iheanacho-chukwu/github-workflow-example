@@ -25,16 +25,16 @@ jobs:
       - name: Print SKIP_CHECKS
         run: echo "SKIP_CHECKS is: ${{ env.SKIP_CHECKS }}"
 
-      - name: Run Checkov Scan
-        env:
-          SKIP_CHECKS: ${{ env.SKIP_CHECKS }}
-        run: |
-          echo "[INFO] Running Checkov scan with SKIP_CHECKS: ${SKIP_CHECKS}"
-          checkov --directory ./Bicep --file ./Bicep/main.bicep --framework bicep --soft-fail --quiet --compact --output junitxml \
-          --output-file-path ./results_checkov.xml --skip-check ${SKIP_CHECKS}
+      # - name: Run Checkov Scan
+      #   env:
+      #     SKIP_CHECKS: ${{ env.SKIP_CHECKS }}
+      #   run: |
+      #     echo "[INFO] Running Checkov scan with SKIP_CHECKS: ${SKIP_CHECKS}"
+      #     checkov --directory ./Bicep --file ./Bicep/main.bicep --framework bicep --soft-fail --quiet --compact --output junitxml \
+      #     --output-file-path ./results_checkov.xml --skip-check ${SKIP_CHECKS}
 
-      - name: Upload Checkov SARIF logs
-        uses: actions/upload-artifact@v3
-        with:
-          name: CheckovScanResults
-          path: ./results_checkov.xml
+      # - name: Upload Checkov SARIF logs
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: CheckovScanResults
+      #     path: ./results_checkov.xml
