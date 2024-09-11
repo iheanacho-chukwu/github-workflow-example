@@ -24,7 +24,7 @@ jobs:
           python3 Scripts/checkov_ignore.py
 
       - name: Print SKIP_CHECKS
-        run: echo "SKIP_CHECKS is: ${{ env.SKIP_CHECKS }}"
+        run: echo "SKIP_CHECKS is $(SKIP_CHECKS)"
 
       # - name: Run Checkov Scan
       #   run: |
