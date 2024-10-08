@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - bicep
+      - sample
 
 jobs:
   deploy:
@@ -25,19 +26,24 @@ jobs:
         id: extract-subscription-id
         run: echo "AZURE_SUBSCRIPTION_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r '.subscriptionId')" >> $GITHUB_ENV
 
+      - name: Check if App Service exists
+        id: check_app
+        run: |
+          if az webapp list --resource-group ${{ vars.ResourceGroupName }} --query "[?name=='sample-web-app']" | grep -q 'sample-web-app'; then
+            echo "exists=true" >> $GITHUB_ENV
+          else
+            echo "exists=false" >> $GITHUB_ENV
+          fi
+
       - name: Deploy Bicep file
+        if: env.exists == 'false'
         id: bicep-deploy
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ vars.ResourceGroupName }}
           template: ./Bicep/main.bicep
-          parameters: ./Bicep/main.bicepparam
+          # parameters: ./Bicep/main.bicepparam
           deploymentName: sampleDeployment
-          deploymentMode: Complete
-          additionalArguments: "--what-if --rollback-on-error --what-if-exclude-change-types Create Ignore"
+          # deploymentMode: Complete
           failOnStdErr: false
-
-      - name: Get deployment outputs
-        run: |
-          echo "Provisioning State: ${{ steps.bicep-deploy.outputs['topicProvisioningState'] }}"
