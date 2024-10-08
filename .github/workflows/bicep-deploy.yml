@@ -42,7 +42,7 @@ jobs:
         with:
           subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ vars.ResourceGroupName }}
-          template: ./Bicep/main.bicep
+          template: ./Bicep/sample.bicep
           # parameters: ./Bicep/main.bicepparam
           deploymentName: sampleDeployment
           # deploymentMode: Complete
