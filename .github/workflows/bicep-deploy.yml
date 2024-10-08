@@ -29,10 +29,12 @@ jobs:
       - name: Check if App Service exists
         id: check_app
         run: |
-          if az webapp list --resource-group ${{ vars.ResourceGroupName }} --query "[?name=='sample-web-app']" | grep -q 'sample-web-app'; then
+          if az webapp list --resource-group ${{ vars.ResourceGroupName }} --query "[?name=='sample-web-app-nacho']" | grep -q 'sample-web-app-nacho'; then
             echo "exists=true" >> $GITHUB_ENV
+            echo "webapp exists"
           else
             echo "exists=false" >> $GITHUB_ENV
+            echo "webapp doesnt exists"
           fi
 
       - name: Deploy Bicep file
@@ -43,7 +45,6 @@ jobs:
           subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ vars.ResourceGroupName }}
           template: ./Bicep/sample.bicep
-          # parameters: ./Bicep/main.bicepparam
+          # parameters: ./Bicep/sample.bicepparam
           deploymentName: sampleDeployment
-          # deploymentMode: Complete
           failOnStdErr: false
