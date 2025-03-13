@@ -1,0 +1,40 @@
+name: Start Azure VM Daily
+
+on:
+  push:
+    branches:
+      - cronjob
+  schedule:
+    - cron: '0 7 * * 1-5' # runs daily at 7:00
+  workflow_dispatch:  # allows manual trigger
+
+jobs:
+  auto-vm-start:
+    runs-on: ubuntu-latest
+    environment: test     # Set  the GitHub environment     
+    env:
+      RESOURCE_GROUP: demo  
+      VM_NAME: agentpool-vm                
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set debug environment variable
+        run: echo "AZURE_ARM_DEPLOY_LOG_LEVEL=debug" >> $GITHUB_ENV
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Extract subscription ID from Azure credentials
+        id: extract-subscription-id
+        run: echo "AZURE_SUBSCRIPTION_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r '.subscriptionId')" >> $GITHUB_ENV
+
+      - name: Start VM
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az account show
+            az vm start --resource-group $RESOURCE_GROUP --name $VM_NAME
