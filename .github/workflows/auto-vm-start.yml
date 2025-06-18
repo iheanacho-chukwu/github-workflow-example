@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - cronjob
-  schedule:
-    - cron: '0 7 * * 1-5' # weekdays at 7:00 UTC
+  # schedule:
+  #   - cron: '0 7 * * 1-5' # weekdays at 7:00 UTC
   workflow_dispatch:
 
 jobs:
